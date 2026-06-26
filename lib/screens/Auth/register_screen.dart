@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:keyperion/screens/register_screen.dart';
+import 'package:keyperion/screens/Auth/OTPScreen.dart';
+import 'package:keyperion/screens/Auth/login_screen.dart';
 
-class LoginScreen extends StatefulWidget{
-  const LoginScreen({super.key});
+class RegisterScreen extends StatefulWidget{
+  const RegisterScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen>{
+class _RegisterScreenState extends State<RegisterScreen>{
+  final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _obscurePassword = true;
@@ -25,7 +27,7 @@ class _LoginScreenState extends State<LoginScreen>{
   @override
   Widget build(BuildContext context){
     return Scaffold(
-      backgroundColor: const Color(0xFFFFFFFF),
+      backgroundColor: const Color(0xFFF8F9FA),
       body: SafeArea(
         child: SingleChildScrollView(
             child: Padding(
@@ -33,7 +35,28 @@ class _LoginScreenState extends State<LoginScreen>{
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 60),
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 16),
+                      child: GestureDetector(
+                        onTap: () => Navigator.pop(context),
+                        child: Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: const BoxDecoration(
+                            color: Colors.white,
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(
+                            Icons.arrow_back_ios_new,
+                            size: 16,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+
                   Center(
                     child: Image.asset(
                       'assets/images/logo.png',
@@ -47,15 +70,15 @@ class _LoginScreenState extends State<LoginScreen>{
                     child: Column(
                       children: [
                         const Text(
-                          'Sign In',
+                          'Sign Up',
                           style: TextStyle(
-                            fontSize: 32,
-                            fontWeight: FontWeight.bold
+                              fontSize: 32,
+                              fontWeight: FontWeight.bold
                           ),
                         ),
                         const SizedBox(height: 8),
                         const Text(
-                          "Welcome back! Please Login",
+                          "Register Your Account",
                           style: TextStyle(color: Colors.black, fontSize: 15),
                         ),
                         const SizedBox(height: 48),
@@ -64,11 +87,29 @@ class _LoginScreenState extends State<LoginScreen>{
                   ),
 
                   TextField(
+                    controller: _nameController,
+                    keyboardType: TextInputType.name,
+                    style: const TextStyle(color: Colors.black),
+                    decoration: InputDecoration(
+                      hintText: 'Your Name',
+                      hintStyle: const TextStyle(color: Colors.black),
+                      prefixIcon: const Icon(Icons.person, color: Colors.black),
+                      filled: true,
+                      fillColor: Colors.black.withOpacity(0.07),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(14),
+                          borderSide: BorderSide.none
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+
+                  TextField(
                     controller: _emailController,
                     keyboardType: TextInputType.emailAddress,
                     style: const TextStyle(color: Colors.black),
                     decoration: InputDecoration(
-                      hintText: 'Email/Username',
+                      hintText: 'Email',
                       hintStyle: const TextStyle(color: Colors.black),
                       prefixIcon: const Icon(Icons.email_outlined, color: Colors.black),
                       filled: true,
@@ -105,56 +146,20 @@ class _LoginScreenState extends State<LoginScreen>{
                       ),
                     ),
                   ),
-                  const SizedBox(height: 12),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          Checkbox(value: _rememberMe,
-                            onChanged: (val)=>setState(() => _rememberMe = val!),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            side: BorderSide(color: Colors.grey.shade400),
-                          ),
-                          const Text(
-                            'Remember Me',
-                            style: TextStyle(color: Colors.black54, fontSize: 13),
-                          ),
-                        ],
-                      ),
+                  const SizedBox(height: 55),
 
-                      TextButton(
-                        onPressed: (){},
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Text(
-                              'Forgot Password?',
-                              style: TextStyle(color: Colors.black),
-                            ),
-                            const SizedBox(height: 4),
-                            Container(
-                              height: 1,
-                              width: 115,
-                              color: Colors.black,
-                            ),
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                  const SizedBox(height: 24),
 
                   SizedBox(
                     width: double.infinity,
                     height: 54,
                     child: ElevatedButton(onPressed: (){
                       // API Call
+
+                      Navigator.push(context,
+                        MaterialPageRoute(builder: (context)=> const Otpscreen()),
+                      );
                     }, child: const Text(
-                      'Login',
+                      'Register',
                       style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
                     ),
                       style: ElevatedButton.styleFrom(
@@ -220,17 +225,17 @@ class _LoginScreenState extends State<LoginScreen>{
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         const Text(
-                          "Don't have an account? ",
+                          "Already have an account? ",
                           style: TextStyle(color: Colors.black),
                         ),
                         GestureDetector(
                           onTap: (){
                             Navigator.push(context,
-                            MaterialPageRoute(builder: (context)=> const RegisterScreen()),
+                              MaterialPageRoute(builder: (context)=> const LoginScreen()),
                             );
                           },
                           child: const Text(
-                            "Register",
+                            "Login",
                             style: TextStyle(
                               color: Color(0xFF000000),
                               fontWeight: FontWeight.bold,

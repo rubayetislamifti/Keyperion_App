@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:keyperion/screens/login_screen.dart';
+import 'package:keyperion/screens/Auth/login_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -34,7 +34,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
   @override
   Widget build(BuildContext context){
     return Scaffold(
-      backgroundColor: const Color(0xFFFFFFFF),
+      backgroundColor: const Color(0xFFF8F9FA),
       body: FadeTransition(
         opacity: _fadeAnimation,
         child: Center(

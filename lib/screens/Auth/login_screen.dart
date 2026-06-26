@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:keyperion/screens/login_screen.dart';
+import 'package:keyperion/screens/Auth/register_screen.dart';
 
-class RegisterScreen extends StatefulWidget{
-  const RegisterScreen({super.key});
+class LoginScreen extends StatefulWidget{
+  const LoginScreen({super.key});
 
   @override
-  State<RegisterScreen> createState() => _RegisterScreenState();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _RegisterScreenState extends State<RegisterScreen>{
-  final _nameController = TextEditingController();
+class _LoginScreenState extends State<LoginScreen>{
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _obscurePassword = true;
@@ -26,7 +25,7 @@ class _RegisterScreenState extends State<RegisterScreen>{
   @override
   Widget build(BuildContext context){
     return Scaffold(
-      backgroundColor: const Color(0xFFFFFFFF),
+      backgroundColor: const Color(0xFFF8F9FA),
       body: SafeArea(
         child: SingleChildScrollView(
             child: Padding(
@@ -48,15 +47,15 @@ class _RegisterScreenState extends State<RegisterScreen>{
                     child: Column(
                       children: [
                         const Text(
-                          'Sign Up',
+                          'Sign In',
                           style: TextStyle(
-                              fontSize: 32,
-                              fontWeight: FontWeight.bold
+                            fontSize: 32,
+                            fontWeight: FontWeight.bold
                           ),
                         ),
                         const SizedBox(height: 8),
                         const Text(
-                          "Register Your Account",
+                          "Welcome back! Please Login",
                           style: TextStyle(color: Colors.black, fontSize: 15),
                         ),
                         const SizedBox(height: 48),
@@ -65,29 +64,11 @@ class _RegisterScreenState extends State<RegisterScreen>{
                   ),
 
                   TextField(
-                    controller: _nameController,
-                    keyboardType: TextInputType.name,
-                    style: const TextStyle(color: Colors.black),
-                    decoration: InputDecoration(
-                      hintText: 'Your Name',
-                      hintStyle: const TextStyle(color: Colors.black),
-                      prefixIcon: const Icon(Icons.person, color: Colors.black),
-                      filled: true,
-                      fillColor: Colors.black.withOpacity(0.07),
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(14),
-                          borderSide: BorderSide.none
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-
-                  TextField(
                     controller: _emailController,
                     keyboardType: TextInputType.emailAddress,
                     style: const TextStyle(color: Colors.black),
                     decoration: InputDecoration(
-                      hintText: 'Email',
+                      hintText: 'Email/Username',
                       hintStyle: const TextStyle(color: Colors.black),
                       prefixIcon: const Icon(Icons.email_outlined, color: Colors.black),
                       filled: true,
@@ -124,8 +105,48 @@ class _RegisterScreenState extends State<RegisterScreen>{
                       ),
                     ),
                   ),
-                  const SizedBox(height: 55),
+                  const SizedBox(height: 12),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          Checkbox(value: _rememberMe,
+                            onChanged: (val)=>setState(() => _rememberMe = val!),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            side: BorderSide(color: Colors.grey.shade400),
+                          ),
+                          const Text(
+                            'Remember Me',
+                            style: TextStyle(color: Colors.black54, fontSize: 13),
+                          ),
+                        ],
+                      ),
 
+                      TextButton(
+                        onPressed: (){},
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Text(
+                              'Forgot Password?',
+                              style: TextStyle(color: Colors.black),
+                            ),
+                            const SizedBox(height: 4),
+                            Container(
+                              height: 1,
+                              width: 115,
+                              color: Colors.black,
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                  const SizedBox(height: 24),
 
                   SizedBox(
                     width: double.infinity,
@@ -133,7 +154,7 @@ class _RegisterScreenState extends State<RegisterScreen>{
                     child: ElevatedButton(onPressed: (){
                       // API Call
                     }, child: const Text(
-                      'Register',
+                      'Login',
                       style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
                     ),
                       style: ElevatedButton.styleFrom(
@@ -199,17 +220,17 @@ class _RegisterScreenState extends State<RegisterScreen>{
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         const Text(
-                          "Already have an account? ",
+                          "Don't have an account? ",
                           style: TextStyle(color: Colors.black),
                         ),
                         GestureDetector(
                           onTap: (){
                             Navigator.push(context,
-                              MaterialPageRoute(builder: (context)=> const LoginScreen()),
+                            MaterialPageRoute(builder: (context)=> const RegisterScreen()),
                             );
                           },
                           child: const Text(
-                            "Login",
+                            "Register",
                             style: TextStyle(
                               color: Color(0xFF000000),
                               fontWeight: FontWeight.bold,
