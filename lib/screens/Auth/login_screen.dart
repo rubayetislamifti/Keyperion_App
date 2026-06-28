@@ -5,6 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:keyperion/constants/api.dart';
 import 'package:keyperion/screens/Auth/register_screen.dart';
 import 'package:http/http.dart' as http;
+import 'package:keyperion/utils/auth_manager.dart';
 
 class LoginScreen extends StatefulWidget{
   final String? email;
@@ -68,6 +69,7 @@ class _LoginScreenState extends State<LoginScreen>{
       if(res.statusCode == 200){
         final resData = jsonDecode(res.body);
 
+        AuthManager().saveToken(resData['data']['token']);
         String successMessage = resData['message'] ?? 'Login Successfull';
         if(mounted){
           ScaffoldMessenger.of(context).showSnackBar(
@@ -148,7 +150,7 @@ class _LoginScreenState extends State<LoginScreen>{
                       hintStyle: const TextStyle(color: Colors.black),
                       prefixIcon: const Icon(Icons.email_outlined, color: Colors.black),
                       filled: true,
-                      fillColor: Colors.black.withOpacity(0.07),
+                      fillColor: Colors.black.withValues(alpha: 0.07),
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(14),
                           borderSide: BorderSide.none
@@ -174,7 +176,7 @@ class _LoginScreenState extends State<LoginScreen>{
                         },
                       ),
                       filled: true,
-                      fillColor: Colors.black.withOpacity(0.07),
+                      fillColor: Colors.black.withValues(alpha: 0.07),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(14),
                         borderSide: BorderSide.none,
@@ -284,7 +286,7 @@ class _LoginScreenState extends State<LoginScreen>{
                             shape: BoxShape.circle,
                             boxShadow: [
                               BoxShadow(
-                                  color: Colors.black.withOpacity(0.05),
+                                  color: Colors.black.withValues(alpha: 0.05),
                                   spreadRadius: 1,
                                   blurRadius: 8,
                                   offset: const Offset(0, 2)

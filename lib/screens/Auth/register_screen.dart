@@ -36,9 +36,9 @@ class _RegisterScreenState extends State<RegisterScreen>{
     final name = _nameController.text.trim();
     final email = _emailController.text.trim();
     final password = _passwordController.text.trim();
-    final confirm_password = _passwordConfirmationController.text.trim();
+    final confirmPassword = _passwordConfirmationController.text.trim();
 
-    if (name.isEmpty || email.isEmpty || password.isEmpty || confirm_password.isEmpty){
+    if (name.isEmpty || email.isEmpty || password.isEmpty || confirmPassword.isEmpty){
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please out all the fields'),
         backgroundColor: Colors.red),
@@ -46,7 +46,7 @@ class _RegisterScreenState extends State<RegisterScreen>{
       return;
     }
 
-    if (password != confirm_password){
+    if (password != confirmPassword){
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Password did not matched'),
         backgroundColor: Colors.red),
@@ -69,7 +69,7 @@ class _RegisterScreenState extends State<RegisterScreen>{
             'name': name,
             'email': email,
             'password': password,
-            'password_confirmation': confirm_password,
+            'password_confirmation': confirmPassword,
             'role':'user'
           }
         )
@@ -186,7 +186,7 @@ class _RegisterScreenState extends State<RegisterScreen>{
                       hintStyle: const TextStyle(color: Colors.black),
                       prefixIcon: const Icon(Icons.person, color: Colors.black),
                       filled: true,
-                      fillColor: Colors.black.withOpacity(0.07),
+                      fillColor: Colors.black.withValues(alpha: 0.07),
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(14),
                           borderSide: BorderSide.none
@@ -204,7 +204,7 @@ class _RegisterScreenState extends State<RegisterScreen>{
                       hintStyle: const TextStyle(color: Colors.black),
                       prefixIcon: const Icon(Icons.email_outlined, color: Colors.black),
                       filled: true,
-                      fillColor: Colors.black.withOpacity(0.07),
+                      fillColor: Colors.black.withValues(alpha: 0.07),
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(14),
                           borderSide: BorderSide.none
@@ -232,7 +232,7 @@ class _RegisterScreenState extends State<RegisterScreen>{
                         },
                       ),
                       filled: true,
-                      fillColor: Colors.black.withOpacity(0.07),
+                      fillColor: Colors.black.withValues(alpha: 0.07),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(14),
                         borderSide: BorderSide.none,
@@ -258,7 +258,7 @@ class _RegisterScreenState extends State<RegisterScreen>{
                         },
                       ),
                       filled: true,
-                      fillColor: Colors.black.withOpacity(0.07),
+                      fillColor: Colors.black.withValues(alpha: 0.07),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(14),
                         borderSide: BorderSide.none,
@@ -320,7 +320,7 @@ class _RegisterScreenState extends State<RegisterScreen>{
                             shape: BoxShape.circle,
                             boxShadow: [
                               BoxShadow(
-                                  color: Colors.black.withOpacity(0.05),
+                                  color: Colors.black.withValues(alpha: 0.05),
                                   spreadRadius: 1,
                                   blurRadius: 8,
                                   offset: const Offset(0, 2)
