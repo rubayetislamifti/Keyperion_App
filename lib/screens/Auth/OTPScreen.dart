@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class Otpscreen extends StatefulWidget {
-  const Otpscreen({super.key});
+  final String email;
+  const Otpscreen({super.key, required this.email});
 
   @override
   State<Otpscreen> createState() => _OtpScreenState();
@@ -84,8 +85,8 @@ class _OtpScreenState extends State<Otpscreen> {
                   ),
                 ),
                 const SizedBox(height: 12),
-                const Text(
-                  "We've sent you a 4 digit OTP to\nex********23@gmail.com",
+                Text(
+                  "We've sent you a 4 digit OTP to\n${widget.email}",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.black54,

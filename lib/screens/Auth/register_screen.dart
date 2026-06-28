@@ -1,7 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:keyperion/constants/api.dart';
 import 'package:keyperion/screens/Auth/OTPScreen.dart';
 import 'package:keyperion/screens/Auth/login_screen.dart';
+import 'package:http/http.dart' as http;
 
 class RegisterScreen extends StatefulWidget{
   const RegisterScreen({super.key});
@@ -17,6 +21,7 @@ class _RegisterScreenState extends State<RegisterScreen>{
   final _passwordConfirmationController = TextEditingController();
   bool _obscurePassword = true;
   bool _obscurePasswordConfirmation = true;
+  bool _isLoading = false;
 
   @override
   void dispose(){
@@ -25,6 +30,89 @@ class _RegisterScreenState extends State<RegisterScreen>{
     _passwordController.dispose();
     _passwordConfirmationController.dispose();
     super.dispose();
+  }
+
+  Future<void> _register() async{
+    final name = _nameController.text.trim();
+    final email = _emailController.text.trim();
+    final password = _passwordController.text.trim();
+    final confirm_password = _passwordConfirmationController.text.trim();
+
+    if (name.isEmpty || email.isEmpty || password.isEmpty || confirm_password.isEmpty){
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please out all the fields'),
+        backgroundColor: Colors.red),
+      );
+      return;
+    }
+
+    if (password != confirm_password){
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Password did not matched'),
+        backgroundColor: Colors.red),
+      );
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    final url = Uri.parse(Api.register);
+
+    try{
+      final res = await http.post(
+        url,
+        headers: { 'Content-Type': 'application/json' },
+        body: jsonEncode(
+          {
+            'name': name,
+            'email': email,
+            'password': password,
+            'password_confirmation': confirm_password,
+            'role':'user'
+          }
+        )
+      );
+
+      final resData = jsonDecode(res.body);
+      print('Response Body: $resData');
+      final status = resData['status'];
+
+      if(status == true){
+        if(mounted){
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(resData['message'] ?? 'Registration Successfull'),
+            backgroundColor: Colors.green,)
+          );
+
+          Navigator.push(context,
+            MaterialPageRoute(builder: (context) => Otpscreen(email: email)),
+          );
+        }
+      }else{
+        if(mounted){
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(resData['error'] ?? 'Registration Failed'),
+          backgroundColor: Colors.red)
+        );
+      }
+      }
+    }catch (e){
+      if(mounted){
+        ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Network Error: Please check your internet connection'),
+        backgroundColor: Colors.red),
+      );
+      }
+    }
+    finally{
+      if(mounted){
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
   }
 
   @override
@@ -183,21 +271,17 @@ class _RegisterScreenState extends State<RegisterScreen>{
                   SizedBox(
                     width: double.infinity,
                     height: 54,
-                    child: ElevatedButton(onPressed: (){
-                      // API Call
-
-                      Navigator.push(context,
-                        MaterialPageRoute(builder: (context)=> const Otpscreen()),
-                      );
-                    }, 
-                    style: ElevatedButton.styleFrom(
+                    child: ElevatedButton(
+                      onPressed: _isLoading ? null : _register,
+                      style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF000000),
                         foregroundColor: Colors.black,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30),
                         ),
                       ),
-                    child: const Text(
+                    child: _isLoading ? const CircularProgressIndicator(color: Colors.white,strokeWidth: 2) :
+                    const Text(
                       'Register',
                       style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
                     ),
