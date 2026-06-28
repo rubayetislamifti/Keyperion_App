@@ -14,13 +14,16 @@ class _RegisterScreenState extends State<RegisterScreen>{
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _passwordConfirmationController = TextEditingController();
   bool _obscurePassword = true;
-  bool _rememberMe = false;
+  bool _obscurePasswordConfirmation = true;
 
   @override
   void dispose(){
+    _nameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
+    _passwordConfirmationController.dispose();
     super.dispose();
   }
 
@@ -134,8 +137,36 @@ class _RegisterScreenState extends State<RegisterScreen>{
                         _obscurePassword ? Icons.visibility_off : Icons.visibility,
                         color: Colors.black,
                       ),
+                        onPressed: () {
+                          setState(() {
+                            _obscurePassword = !_obscurePassword;
+                          });
+                        },
+                      ),
+                      filled: true,
+                      fillColor: Colors.black.withOpacity(0.07),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(14),
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+
+                  TextField(
+                    controller: _passwordConfirmationController,
+                    obscureText: _obscurePasswordConfirmation,
+                    style: const TextStyle(color: Colors.black),
+                    decoration: InputDecoration(
+                      hintText: 'Confirm Password',
+                      hintStyle: const TextStyle(color: Colors.black),
+                      prefixIcon: const Icon(Icons.lock_outline, color: Colors.black),
+                      suffixIcon: IconButton(icon: Icon(
+                        _obscurePasswordConfirmation ? Icons.visibility_off : Icons.visibility,
+                        color: Colors.black,
+                      ),
                         onPressed: (){
-                          setState(() => _obscurePassword = !_obscurePassword);
+                          setState(() { _obscurePasswordConfirmation = !_obscurePasswordConfirmation;}) ;
                         },
                       ),
                       filled: true,
@@ -158,17 +189,19 @@ class _RegisterScreenState extends State<RegisterScreen>{
                       Navigator.push(context,
                         MaterialPageRoute(builder: (context)=> const Otpscreen()),
                       );
-                    }, child: const Text(
-                      'Register',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
-                    ),
-                      style: ElevatedButton.styleFrom(
+                    }, 
+                    style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF000000),
                         foregroundColor: Colors.black,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30),
                         ),
                       ),
+                    child: const Text(
+                      'Register',
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+                    ),
+                      
                     ),
                   ),
                   const SizedBox(height: 24),

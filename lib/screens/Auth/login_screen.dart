@@ -1,6 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:keyperion/constants/api.dart';
 import 'package:keyperion/screens/Auth/register_screen.dart';
+import 'package:http/http.dart' as http;
 
 class LoginScreen extends StatefulWidget{
   const LoginScreen({super.key});
@@ -14,12 +18,75 @@ class _LoginScreenState extends State<LoginScreen>{
   final _passwordController = TextEditingController();
   bool _obscurePassword = true;
   bool _rememberMe = false;
+  bool _isLoading = false;
 
   @override
   void dispose(){
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+
+  Future<void> _loginUser() async{
+    final email = _emailController.text.trim();
+    final password = _passwordController.text.trim();
+
+    if (email.isEmpty || password.isEmpty){
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please Fill in all fields')),
+      );
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    final url = Uri.parse(Api.login);
+
+    try{
+      final res = await http.post(
+        url,
+        headers: {
+         'Content-Type': 'application/json' 
+        },
+        body: jsonEncode({
+          'email':email,
+          'password':password,
+        }),
+      );
+
+      if(res.statusCode == 200){
+        final resData = jsonDecode(res.body);
+
+        String successMessage = resData['message'] ?? 'Login Successfull';
+        if(mounted){
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(successMessage),backgroundColor: Colors.green,));
+        }
+      }else{
+        final resData = jsonDecode(res.body);
+
+        String errorMessage = resData['message'] ?? 'Login Failed';
+        if(mounted){
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(errorMessage),backgroundColor: Colors.red,));
+        }
+      }
+    }catch(e){
+      if(mounted){
+        ScaffoldMessenger.of(context).showSnackBar(
+         const SnackBar(content: Text('Network Error: Please check your internet connection')),
+        );
+      }
+    }
+    finally{
+      if(mounted){
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
   }
 
   @override
@@ -151,17 +218,27 @@ class _LoginScreenState extends State<LoginScreen>{
                   SizedBox(
                     width: double.infinity,
                     height: 54,
-                    child: ElevatedButton(onPressed: (){
-                      // API Call
-                    }, child: const Text(
-                      'Login',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
-                    ),
+                    child: ElevatedButton(
+                      onPressed: _isLoading ? null: _loginUser, 
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF000000),
                         foregroundColor: Colors.black,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30),
+                        ),
+                      ),
+                      child: _isLoading ? const SizedBox(
+                        width: 24,
+                        height: 24,
+                        child: CircularProgressIndicator(
+                          color: Colors.white,
+                          strokeWidth: 2,
+                        ),
+                      ) : const Text(
+                        'Login',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold, color: Colors.white
                         ),
                       ),
                     ),
