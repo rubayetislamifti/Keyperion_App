@@ -1,5 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:keyperion/constants/api.dart';
+import 'package:http/http.dart' as http;
+import 'package:keyperion/screens/Auth/login_screen.dart';
 
 class Otpscreen extends StatefulWidget {
   final String email;
@@ -13,7 +18,8 @@ class _OtpScreenState extends State<Otpscreen> {
   final List<TextEditingController> _controllers =
   List.generate(4, (_) => TextEditingController());
   final List<FocusNode> _focusNodes = List.generate(4, (_) => FocusNode());
-
+  bool _isLoading = false;
+  
   @override
   void dispose() {
     for (var controller in _controllers) {
@@ -31,6 +37,56 @@ class _OtpScreenState extends State<Otpscreen> {
     }
     if (value.isEmpty && index > 0) {
       _focusNodes[index - 1].requestFocus();
+    }
+  }
+
+  Future<void> _verifyOtp() async{
+    final otp = _controllers.map((e) => e.text).join();
+
+    if (otp.length < 4){
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please enter the full OTP'),backgroundColor: Colors.red)
+      );
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    final url = Uri.parse(Api.verifyOtp);
+
+    try{
+      final res = await http.post(
+        url,
+        headers: {'Content-Type':'application/json'},
+        body: jsonEncode({
+          'email':widget.email,
+          'otp':otp
+        })
+      );
+
+      final resData = jsonDecode(res.body);
+
+      if(resData['status'] == true){
+        if(mounted){
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(resData['message'] ?? 'OTP Verified Successfully'),backgroundColor: Colors.green)
+          );
+
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginScreen(email: widget.email)));
+        }
+      }
+    }catch(e){
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: $e'),backgroundColor: Colors.red)
+      );
+    }finally{
+      if(mounted){
+        setState(() {
+          _isLoading = false;
+        });
+      }
     }
   }
 
@@ -107,11 +163,7 @@ class _OtpScreenState extends State<Otpscreen> {
                   width: double.infinity,
                   height: 56,
                   child: ElevatedButton(
-                    onPressed: () {
-                      String otp =
-                      _controllers.map((e) => e.text).join();
-                      print(otp);
-                    },
+                    onPressed: _isLoading ? null : _verifyOtp,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF1E1E1E),
                       foregroundColor: Colors.white,
@@ -120,7 +172,9 @@ class _OtpScreenState extends State<Otpscreen> {
                       ),
                       elevation: 0,
                     ),
-                    child: const Text(
+                    child: 
+                    _isLoading ? const CircularProgressIndicator(color: Colors.white, strokeWidth: 2,)
+                    : const Text(
                       'Verify OTP',
                       style: TextStyle(
                         fontSize: 16,

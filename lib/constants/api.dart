@@ -5,4 +5,5 @@ class Api {
   
   static const String login = '$baseURL/login';
   static const String register = '$baseURL/register';
+  static const String verifyOtp = '$baseURL/verify/otp';
 }

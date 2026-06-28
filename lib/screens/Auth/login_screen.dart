@@ -7,7 +7,8 @@ import 'package:keyperion/screens/Auth/register_screen.dart';
 import 'package:http/http.dart' as http;
 
 class LoginScreen extends StatefulWidget{
-  const LoginScreen({super.key});
+  final String? email;
+  const LoginScreen({super.key, this.email});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -25,6 +26,14 @@ class _LoginScreenState extends State<LoginScreen>{
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+
+  @override
+  void initState(){
+    super.initState();
+      if(widget.email != null){
+        _emailController.text = widget.email!;
+      }
   }
 
   Future<void> _loginUser() async{
