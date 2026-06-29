@@ -14,7 +14,9 @@ class BottomNavBar extends StatelessWidget{
   Widget build(BuildContext context){
     return SafeArea(
       child: Padding(padding: const EdgeInsets.only(
-        left: 24, right: 24, bottom: 18
+        left: 65, 
+        right: 65, 
+        bottom: 18
       ),
     child: Container(
       height: 68,

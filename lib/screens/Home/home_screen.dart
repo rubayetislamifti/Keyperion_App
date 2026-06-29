@@ -2,8 +2,12 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:keyperion/constants/api.dart';
+import 'package:keyperion/screens/Appointments/appointments_screen.dart';
+import 'package:keyperion/screens/Chat/chat_screen.dart';
 import 'package:keyperion/screens/Home/unit/no_unit_screen.dart';
 import 'package:keyperion/screens/Home/unit/unit_dashboard_screen.dart';
+import 'package:keyperion/screens/Maintenance/maintenance_screen.dart';
+import 'package:keyperion/screens/Profile/profile_screens.dart';
 import 'package:keyperion/utils/auth_manager.dart';
 import 'package:keyperion/widgets/bottom_nav_bar.dart';
 import 'package:keyperion/widgets/header.dart';
@@ -24,10 +28,19 @@ class _HomeScreenState extends State<HomeScreen>{
   bool _hasUnit = false;
   int _currentIndex = 0;
 
+  late final List<Widget> _pages;
 
+  @override
   void initState(){
     super.initState();
     _fetchUserInfo();
+    _pages = [
+      const UnitDashboardScreen(),
+      const MaintenanceScreen(),
+      const ChatScreen(),
+      const AppointmentsScreen(),
+      const ProfileScreen()
+    ];
   }
 
 Future<void> _fetchUserInfo() async{
@@ -66,6 +79,8 @@ Future<void> _fetchUserInfo() async{
   }
 }
 
+
+
  @override
  Widget build(BuildContext context){
   return Scaffold(
@@ -76,9 +91,11 @@ Future<void> _fetchUserInfo() async{
         strokeWidth: 3,
       )) : Column(
         children: [
-          Header(name: _name, email: _email, image: _image),
+          if(_currentIndex != 4)
+            Header(name: _name, email: _email, image: _image),
 
-          Expanded(child: _hasUnit ? const UnitDashboardScreen() : const NoUnitScreen())
+          // Expanded(child: _hasUnit ? const UnitDashboardScreen() : const NoUnitScreen())
+          Expanded(child: _pages[_currentIndex])
         ],
       ),
       
