@@ -5,6 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:keyperion/constants/api.dart';
 import 'package:keyperion/screens/Auth/register_screen.dart';
 import 'package:http/http.dart' as http;
+import 'package:keyperion/screens/Home/home_screen.dart';
 import 'package:keyperion/utils/auth_manager.dart';
 
 class LoginScreen extends StatefulWidget{
@@ -74,6 +75,10 @@ class _LoginScreenState extends State<LoginScreen>{
         if(mounted){
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(successMessage),backgroundColor: Colors.green,));
+
+            Navigator.push(context, 
+              MaterialPageRoute(builder: (context)=> const HomeScreen())
+            );
         }
       }else{
         final resData = jsonDecode(res.body);
