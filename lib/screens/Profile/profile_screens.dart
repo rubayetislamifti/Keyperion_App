@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:keyperion/constants/api.dart';
+import 'package:keyperion/screens/Profile/Account_Settings/account_settings_screen.dart';
 import 'package:keyperion/utils/auth_manager.dart';
 import 'package:http/http.dart' as http;
 
@@ -199,7 +200,12 @@ class _ProfileStateScreen extends State<ProfileScreen>{
               icon: Icons.person_outline_rounded,
               title: 'Account settings',
               subtitle: 'Edit your profile informations',
-              onTap: () {},
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context)=>AccountSettingsScreen())
+                );
+              },
             ),
             _buildSettingTile(
               icon: Icons.chat_bubble_outline_rounded,
