@@ -1,2 +1,4 @@
 build/
 .dart_tool/
+config.bat
+node_modules
